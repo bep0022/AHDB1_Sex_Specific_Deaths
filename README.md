@@ -45,7 +45,7 @@ In this respository, we have opted for the use of R Markdowns instead of R Scrip
 
 ## Input Data
 For the AHDB1_Death_TS.Rmd :
-- [AHDB_MasterDataSheet.csv](https://github.com/bep0022/AHDB1_Sex_Specific_Deaths/blob/main/AHDB_MasterDataSheet.csv) : This is the specifying the samples of interest by their ID_Band. Indicated by the Died_InTrt column we have whether they did "1" or did not died "0" due to heat stress. Other important metrics such as AgeCategory, Sex, and Treatment are included.  
+- [AHDB_MasterDataSheet.csv](https://github.com/bep0022/AHDB1_Sex_Specific_Deaths/blob/main/AHDB_MasterDataSheet.csv) : This is the file specifying the samples of interest by their ID_Band. Indicated by the Died_InTrt column we have whether they did "1" or did not died "0" due to heat stress. Other important metrics such as AgeCategory, Sex, and Treatment are included.  
 - [Younger.csv](https://github.com/bep0022/AHDB1_Sex_Specific_Deaths/blob/main/Younger.csv) : This is a subset of the master data sheet that only includes younger individuals.
 
 For the AHDB1_mtDNA_Telo.Rmd : 
@@ -54,5 +54,8 @@ For the AHDB1_mtDNA_Telo.Rmd :
 - [Trait_MetaData.csv](https://github.com/bep0022/AHDB1_Sex_Specific_Deaths/blob/main/Trait_MetaData.csv) : This is a file that contains phenotypic data of the Samples. It is merged with the qPCR data post filtering of outliers, in preparation for input for the telomere and mtDNA statistical analysis. 
 
 ## Output Data
-This repository contains the output data files. 
+For the AHDB1_mtDNA_Telo.Rmd : 
 - [Plate1_FinalData.csv](https://github.com/bep0022/AHDB1_Sex_Specific_Deaths/blob/main/Plate1_FinalData.csv) : This is the output from the AHDB1_mtDNA_Telo.Rmd file. This file contains the merged contents of the filtered telomere and mtDNA qPCR data and the Trait_MetaData.csv file. 
+
+## Software
+All data processing and analyses were conducted on RStudio. 
