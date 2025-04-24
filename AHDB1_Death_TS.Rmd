@@ -1,0 +1,229 @@
+---
+title: "AHDB1_Death_TS"
+author: "Tonia S. Schwartz"
+date: "2025-01-22"
+output: 
+  md_document:
+    variant: gfm
+  pdf_document:
+  word_document:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+https://github.com/StatQuest/logistic_regression_demo/blob/master/logistic_regression_demo.R
+###Read in main data files
+```{r, echo=T, message=F, warning=F, results='hide'}
+library(multcomp)
+library(ggplot2)
+library(nlme)
+library(grid)
+library(gridExtra)
+library(emmeans)
+library(cowplot)
+library(ggplot2)
+
+```
+
+
+# Read in the data
+```{r}
+data=read.csv("AHDB_MasterDataSheet.csv")
+data
+xtabs(~ Died_InTrt + Sex, data=data) # Summarize the number of deaths by Sex
+xtabs(~ Died_InTrt + AgeCategory, data=data) # Summarize the number of deaths by Age
+```
+
+# Run generalized linear model for Sex
+```{r}
+logistic <- glm(Died_InTrt ~ Sex, data=data, family="binomial")
+summary(logistic)
+
+female.log.odds <- log(9 / 36)
+female.log.odds
+
+male.log.odds <- log(0 / 18)
+male.log.odds
+```
+
+# Now calculate the overall "Pseudo R-squared" and its p-value for Sex
+```{r}
+## NOTE: Since we are doing logistic regression...
+## Null devaince = 2*(0 - LogLikelihood(null model))
+##               = -2*LogLikihood(null model)
+## Residual deviacne = 2*(0 - LogLikelihood(proposed model))
+##                   = -2*LogLikelihood(proposed model)
+ll.null <- logistic$null.deviance/-2
+ll.proposed <- logistic$deviance/-2
+ 
+## McFadden's Pseudo R^2 = [ LL(Null) - LL(Proposed) ] / LL(Null)
+(ll.null - ll.proposed) / ll.null
+ 
+## chi-square value = 2*(LL(Proposed) - LL(Null))
+## p-value = 1 - pchisq(chi-square value, df = 2-1)
+1 - pchisq(2*(ll.proposed - ll.null), df=1)
+1 - pchisq((logistic$null.deviance - logistic$deviance), df=1)
+```
+
+## Lastly, let's  see what this logistic regression predicts, given that an individual is either female or male (and no other data about them).
+```{r}
+predicted.data_sex <- data.frame(
+  probability.of.Data=logistic$fitted.values,
+  sex=data$Sex)
+ 
+## We can plot the data...
+ggplot(data=predicted.data_sex, aes(x=sex, y=probability.of.Data)) +
+  geom_point(aes(color=sex), size=5) +
+  xlab("Sex") +
+  ylab("Predicted probability of Death in Acute Heat in all birds")
+ 
+## Since there are only two probabilities (one for females and one for males),
+## we can use a table to summarize the predicted probabilities.
+xtabs(~ probability.of.Data + sex, data=predicted.data_sex)
+```
+
+
+# Run a generalized linear model for Age
+```{r}
+logistic2 <- glm(Died_InTrt ~ AgeCategory, data=data, family="binomial")
+summary(logistic2)
+```
+
+# Now calculate the overall "Pseudo R-squared" and its p-value for Age
+```{r}
+## NOTE: Since we are doing logistic regression...
+## Null devaince = 2*(0 - LogLikelihood(null model))
+##               = -2*LogLikihood(null model)
+## Residual deviacne = 2*(0 - LogLikelihood(proposed model))
+##                   = -2*LogLikelihood(proposed model)
+ll.null <- logistic2$null.deviance/-2
+ll.proposed <- logistic2$deviance/-2
+ 
+## McFadden's Pseudo R^2 = [ LL(Null) - LL(Proposed) ] / LL(Null)
+(ll.null - ll.proposed) / ll.null
+ 
+## chi-square value = 2*(LL(Proposed) - LL(Null))
+## p-value = 1 - pchisq(chi-square value, df = 2-1)
+1 - pchisq(2*(ll.proposed - ll.null), df=1)
+1 - pchisq((logistic2$null.deviance - logistic2$deviance), df=1)
+```
+
+# Lastly, let's  see what this logistic regression predicts, given that an individual is either younger or older (and no other data about them).
+```{r}
+predicted.data_Age <- data.frame(
+  probability.of.Data=logistic2$fitted.values,
+  AgeCategory=data$AgeCategory)
+ 
+## We can plot the data...
+ggplot(data=predicted.data_Age, aes(x=AgeCategory, y=probability.of.Data)) +
+  geom_point(aes(color=AgeCategory), size=5) +
+  xlab("Age") +
+  ylab("Predicted probability of Death in Acute Heat in all birds")
+ 
+## Since there are only two probabilities (one for females and one for males),
+## we can use a table to summarize the predicted probabilities.
+xtabs(~ probability.of.Data + AgeCategory, data=predicted.data_Age)
+```
+
+
+
+
+# Run a generalized linear model for Sex and Age
+```{r}
+logistic_Age_Sex <- glm(Died_InTrt ~ AgeCategory + Sex, data=data, family="binomial")
+summary(logistic_Age_Sex)
+```
+
+# Now calculate the overall "Pseudo R-squared" and its p-value for sex and age
+```{r}
+## NOTE: Since we are doing logistic regression...
+## Null devaince = 2*(0 - LogLikelihood(null model))
+##               = -2*LogLikihood(null model)
+## Residual deviacne = 2*(0 - LogLikelihood(proposed model))
+##                   = -2*LogLikelihood(proposed model)
+ll.null <- logistic_Age_Sex$null.deviance/-2
+ll.proposed <- logistic_Age_Sex$deviance/-2
+ 
+## McFadden's Pseudo R^2 = [ LL(Null) - LL(Proposed) ] / LL(Null)
+(ll.null - ll.proposed) / ll.null
+ 
+## chi-square value = 2*(LL(Proposed) - LL(Null))
+## p-value = 1 - pchisq(chi-square value, df = 2-1)
+1 - pchisq(2*(ll.proposed - ll.null), df=1)
+1 - pchisq((logistic_Age_Sex$null.deviance - logistic_Age_Sex$deviance), df=1)
+```
+
+## Lastly, let's  see what this logistic regression predicts, given that an individual is either younger female, older female, younger male, or older male (and no other data about them).
+```{r} 
+predicted.data_Age_Sex <- data.frame(
+  probability.of.Data=logistic_Age_Sex$fitted.values,
+  AgeCategory=data$AgeCategory, Sex=data$Sex)
+ 
+## We can plot the data...
+ggplot(data=predicted.data_Age_Sex, aes(x=AgeCategory, y=probability.of.Data, fill=Sex)) +
+  geom_point(aes(color=Sex), size=5) +
+  xlab("Age") +
+  ylab("Predicted probability of Death in Acute Heat in all birds")
+ 
+## Since there are only two probabilities (one for females and one for males),
+## we can use a table to summarize the predicted probabilities.
+xtabs(~ probability.of.Data + AgeCategory + Sex, data=predicted.data_Age_Sex)
+```
+
+
+# Read in the data - Younger animals only
+```{r}
+YoungerData=read.csv("Younger.csv")
+xtabs(~ Died_InTrt + Sex, data=YoungerData)
+```
+
+# Run a generalized linear model for sex in the dataframe only containing younger individuals
+```{r}
+logistic3 <- glm(Died_InTrt ~ Sex, data=YoungerData, family="binomial")
+summary(logistic3)
+
+Youngfemale.log.odds <- log(9 / 36)
+Youngfemale.log.odds
+
+Youngmale.log.odds <- log(0 / 18)
+Youngmale.log.odds
+```
+
+# Now calculate the overall "Pseudo R-squared" and its p-value for younger individuals by sex
+```{r}
+ ## NOTE: Since we are doing logistic regression...
+## Null devaince = 2*(0 - LogLikelihood(null model))
+##               = -2*LogLikihood(null model)
+## Residual deviacne = 2*(0 - LogLikelihood(proposed model))
+##                   = -2*LogLikelihood(proposed model)
+ll.null <- logistic3$null.deviance/-2
+ll.proposed <- logistic3$deviance/-2
+ 
+## McFadden's Pseudo R^2 = [ LL(Null) - LL(Proposed) ] / LL(Null)
+(ll.null - ll.proposed) / ll.null
+ 
+## chi-square value = 2*(LL(Proposed) - LL(Null))
+## p-value = 1 - pchisq(chi-square value, df = 2-1)
+1 - pchisq(2*(ll.proposed - ll.null), df=1)
+1 - pchisq((logistic3$null.deviance - logistic3$deviance), df=1)
+```
+
+# Lastly, let's  see what this logistic regression predicts.
+```{r}
+predicted.data <- data.frame(
+  probability.of.YoungerData=logistic3$fitted.values,
+  sex=YoungerData$Sex)
+ 
+## We can plot the data...
+ggplot(data=predicted.data, aes(x=sex, y=probability.of.YoungerData)) +
+  geom_point(aes(color=sex), size=5) +
+  xlab("Sex") +
+  ylab("Predicted probability of Death in Acute Heat in 4 month old birds")
+ 
+## Since there are only two probabilities (one for females and one for males),
+## we can use a table to summarize the predicted probabilities.
+xtabs(~ probability.of.YoungerData + sex, data=predicted.data)
+```
+ 
+ 
