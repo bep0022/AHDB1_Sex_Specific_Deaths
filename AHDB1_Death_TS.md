@@ -212,7 +212,8 @@ predicted.data_sex <- data.frame(
 ggplot(data=predicted.data_sex, aes(x=sex, y=probability.of.Data)) +
   geom_point(aes(color=sex), size=5) +
   xlab("Sex") +
-  ylab("Predicted probability of Death in Acute Heat in all birds")
+  ylab("Predicted probability of Death in Acute Heat in all birds") +
+  theme_classic()
 ```
 
 ![](AHDB1_Death_TS_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
@@ -301,7 +302,8 @@ predicted.data_Age <- data.frame(
 ggplot(data=predicted.data_Age, aes(x=AgeCategory, y=probability.of.Data)) +
   geom_point(aes(color=AgeCategory), size=5) +
   xlab("Age") +
-  ylab("Predicted probability of Death in Acute Heat in all birds")
+  ylab("Predicted probability of Death in Acute Heat in all birds") +
+  theme_classic()
 ```
 
 ![](AHDB1_Death_TS_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
@@ -391,7 +393,8 @@ predicted.data_Age_Sex <- data.frame(
 ggplot(data=predicted.data_Age_Sex, aes(x=AgeCategory, y=probability.of.Data, fill=Sex)) +
   geom_point(aes(color=Sex), size=5) +
   xlab("Age") +
-  ylab("Predicted probability of Death in Acute Heat in all birds")
+  ylab("Predicted probability of Death in Acute Heat in all birds") +
+  theme_classic()
 ```
 
 ![](AHDB1_Death_TS_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
@@ -518,7 +521,8 @@ predicted.data <- data.frame(
 ggplot(data=predicted.data, aes(x=sex, y=probability.of.YoungerData)) +
   geom_point(aes(color=sex), size=5) +
   xlab("Sex") +
-  ylab("Predicted probability of Death in Acute Heat in 4 month old birds")
+  ylab("Predicted Probability of Acute Heat Death in Younger Birds") +
+  theme_classic()
 ```
 
 ![](AHDB1_Death_TS_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
