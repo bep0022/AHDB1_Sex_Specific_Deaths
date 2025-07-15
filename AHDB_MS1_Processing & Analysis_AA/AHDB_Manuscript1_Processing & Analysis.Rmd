@@ -1,5 +1,5 @@
 ---
-Author: Ali Amer
+Author: "Ali Amer"
 title: "MS1: Predictors of Sex-Specific Heat Stress Death"
 date: "2025-07-15"
 output: 
@@ -672,10 +672,8 @@ summary(glmer_model_Hematocrit)
 # Hematocrit not significant - low variance in mom ID, no cohort effect observed 
 ```
 
-# GLMER -> Hematocrit Model (Excludes Lysed Individuals)
-
 # Remove rows with plasma color other than (“U” or “U/L”, "Y") and calculate how many individuals were removed
-# Logic: Hemolysis could release compounds (NADH, Catalase) that may interfere and skew glucose and ketone readings
+# Logic: Hemolysis could change levels of hematocrit measured specifically by decreasing the packed RBC's skewing data towards higher Hct
 
 ```{r}
 
@@ -727,7 +725,8 @@ Younger_females_Hem_NotLysed$logHematocrit <- log10(Younger_females_Hem_NotLysed
 hist(Younger_females_Hem_NotLysed$logHematocrit)
 
 ```
-# GLMER -> Hematocrit Model (Includes Lysed Individuals)
+
+# GLMER -> Hematocrit Model (Excludes Lysed Individuals)
 
 ```{r}
 
@@ -739,8 +738,8 @@ glmer_model_Hematocrit <- glmer(Died_InTrt ~  logHematocrit +
 summary(glmer_model_Hematocrit)
 # Not significant, low variance for cohort and mom_id
 ```
-# ALL SUBSEQUENT ANALYSES NOT REMOVE MOM_ID AS A RANDOM EFFECT 
 
+# ALL SUBSEQUENT ANALYSES NOW REMOVE MOM_ID AS A RANDOM EFFECT 
 # GLMER -> Glucose Model (WITH LYSED BUT NO Mom_ID)
 
 ```{r}
