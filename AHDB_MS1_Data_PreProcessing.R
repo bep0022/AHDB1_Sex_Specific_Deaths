@@ -37,10 +37,21 @@ MitoTelo_clean <- MitoTelo %>%
   select(-Sample)  # Removes old Sample column
 head(MitoTelo_clean)
 
+
 # Subset Mito Columns Needed
 mito_subset <- MitoTelo_clean[, c("ID_Band", "TimePoint", "SQ.Mean_SCNAG", "SQ.Mean_mtDNA", "mtDNA.Mean",
                         "Cq.Mean_SCNAG", "SQ.Mean_Telomeres", "Cq.Mean_Telomeres", 
                         "Telomeres.per.cell")]
+
+colnames(mito_subset)[3:9] <- c(
+  "Blood_SQ.Mean_SCNAG",
+  "Blood_SQ.Mean_mtDNA",
+  "Blood_mtDNA.Mean",
+  "Blood_Cq.Mean_SCNAG",
+  "Blood_SQ.Mean_Telomeres",
+  "Blood_Cq.Mean_Telomeres",
+  "Blood_Telomeres.per.cell"
+)
 
 # Merge by ID_Band and TimePoint
 MitoBlood_Merge <- merge(MasterSpreadsheet, mito_subset, 
@@ -53,7 +64,6 @@ head(MitoBlood_Merge)
 
 # Fix Column Names
 colnames(CORT)[colnames(CORT) == "BirdID"] <- "ID_Band"
-colnames(CORT)[colnames(CORT) == "Timepoint"] <- "TimePoint"
 
 # Ensure matching types
 CORT$ID_Band <- as.integer(CORT$ID_Band)
