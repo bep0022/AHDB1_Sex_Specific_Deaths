@@ -25,6 +25,7 @@ library(ggeffects)
 library(tibble)
 
 ```
+
 # Clear memory, set working directory, read in datafile & define plot theme
 ```{r}
 
@@ -122,6 +123,12 @@ AHDB_Exp1_MS1 %>%
     Females = sum(Sex == "F")
   )
 
+# Remove unconscious individuals 
+
+AHDB_Exp1_MS1 <- AHDB_Exp1_MS1[
+  !AHDB_Exp1_MS1$ID_Band %in% c("4817", "4531"),
+]
+
 ```
 
 # Firth Model -> Sex 
@@ -147,7 +154,7 @@ ll.proposed <- firth_fit_sex$loglik[2]
 pseudoR2 <- (ll.proposed - ll.null) / ll.null
 cat("Pseudo R²:", pseudoR2, "\n")
 
-# Result: 5.9%%
+# Result: 5.2%%
 
 ```
 
