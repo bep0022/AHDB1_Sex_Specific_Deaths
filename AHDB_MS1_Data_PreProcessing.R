@@ -191,27 +191,13 @@ Plate1_FinalData <- Plate1_FinalData %>%
   ungroup()
 
 
-# Merge Final Data with Trait MetaData for your individuals
-# Load in Data
-Trait <- read.csv("Trait_MetaData.csv")
-dim (Trait)
-
-# Merge both datasets
-FinalData <- merge(Plate1_FinalData, Trait, by = c("Sample"))
-
-
-# Write the final data file for this plate
-write.csv(file = "AHDB1_Manuscript1_ESEBqPCR_FinalData.csv", FinalData, row.names = FALSE)
-
-
 ### Final Data Processing & Filtering - mtDNA and Telomeres, and CORT
 # Read CSV files
 
 MasterSpreadsheet <- read.csv("AHDB_Exp1_BloodData.csv", header=T, sep = ",", as.is=T)
 str(MasterSpreadsheet)
 
-MitoTelo <- read.csv("AHDB1_Manuscript1_ESEBqPCR_FinalData.csv", header=T, sep = ",", as.is=T)
-str(MitoTelo)
+MitoTelo <- Plate1_FinalData
 
 CORT <- read.csv("AHDB_CORT_FileForMasterDataset.csv", header=T, sep = ",", as.is=T)
 str(CORT)
@@ -221,6 +207,7 @@ str(CORT)
 # 2. Remove B in Sample Column (B = Baseline) 
 # There exists a seperate timepoint column hence B in Sample column (now ID_Band) can be removed)
 
+MitoTelo$TimePoint <- "Baseline"
 MitoTelo_clean <- MitoTelo %>%
   mutate(
     ID_Band = as.numeric(str_extract(Sample, "\\d+"))  # keeps numeric part corresponding to bird_ID 
