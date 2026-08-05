@@ -208,19 +208,43 @@ ggplot(obs_death, aes(x = AgeCategory , y = Proportion)) +
 
 # Bar Graph
 # Create a plotting version of the data with a tiny positive value for zero bars
-obs_death_plot <- obs_death %>%
-  mutate(Proportion_fixed = ifelse(Proportion == 0, 0.001, Proportion))
-
-ggplot(obs_death_plot, aes(x = AgeCategory, y = Proportion_fixed, fill = Sex)) +
-  geom_col(position = position_dodge(width = 0.9), width = 0.8) +
-  # Apply custom colors for Sex
-  scale_fill_manual(values = c( "#D3D3D3", "#000000")) +
+p <- ggplot(obs_death_plot, aes(x = AgeCategory, y = Proportion_fixed, fill = Sex)) +
+  geom_col(
+    position = position_dodge(width = 0.9),
+    width = 0.8
+  ) +
+  geom_text(
+    aes(label = label),
+    position = position_dodge(width = 0.9),
+    vjust = -0.5,
+    size = 6
+  ) +
+  scale_fill_manual(values = c("#D3D3D3", "#000000")) +
+  scale_x_discrete(
+    labels = c(
+      "Younger" = "Pubescent Adult",
+      "Older" = "Young Adult"
+    )
+  ) +
+  scale_y_continuous(
+  limits = c(-0.01, 0.27),
+  breaks = seq(0, 0.25, 0.05)
+  ) +
   labs(
-#    title = "High mortality of younger females during acute heat",
     x = "Age Category",
-    y = "Observed Mortality"
+    y = "Proportion Succumbed"
   ) +
   theme_classic(base_size = 18)
+
+ggsave(
+  filename = "Proportion_Succumbed.png",
+  plot = p,
+  width = 7,
+  height = 5,
+  units = "in",
+  dpi = 600
+)
+
 ```
 
 # Firth Model - Sex + Age 
