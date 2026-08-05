@@ -14,84 +14,6 @@ library(dplyr)
 library(readr)
 library(stringr)
 
-# Read CSV Files
-
-MasterSpreadsheet <- read.csv("AHDB_Exp1_BloodData.csv", header=T, sep = ",", as.is=T)
-str(MasterSpreadsheet)
-
-MitoTelo <- read.csv("AHDB1_Manuscript1_ESEBqPCR_FinalData.csv", header=T, sep = ",", as.is=T)
-str(MitoTelo)
-
-CORT <- read.csv("AHDB_CORT_FileForMasterDataset.csv", header=T, sep = ",", as.is=T)
-str(CORT)
-
-# Clean MitoTelo Dataset 
-# 1. Set Sample Column Name to ID_Band,
-# 2. Remove B in Sample Column (B = Baseline) 
-# There exists a seperate timepoint column hence B in Sample column (now ID_Band) can be removed)
-
-MitoTelo_clean <- MitoTelo %>%
-  mutate(
-    ID_Band = as.numeric(str_extract(Sample, "\\d+"))  # keeps numeric part corresponding to bird_ID 
-  ) %>%
-  select(-Sample)  # Removes old Sample column
-head(MitoTelo_clean)
-
-
-# Subset Mito Columns Needed
-mito_subset <- MitoTelo_clean[, c("ID_Band", "TimePoint", "SQ.Mean_SCNAG", "SQ.Mean_mtDNA", "mtDNA.Mean",
-                        "Cq.Mean_SCNAG", "SQ.Mean_Telomeres", "Cq.Mean_Telomeres", 
-                        "Telomeres.per.cell")]
-
-colnames(mito_subset)[3:9] <- c(
-  "Blood_SQ.Mean_SCNAG",
-  "Blood_SQ.Mean_mtDNA",
-  "Blood_mtDNA.Mean",
-  "Blood_Cq.Mean_SCNAG",
-  "Blood_SQ.Mean_Telomeres",
-  "Blood_Cq.Mean_Telomeres",
-  "Blood_Telomeres.per.cell"
-)
-
-# Merge by ID_Band and TimePoint
-MitoBlood_Merge <- merge(MasterSpreadsheet, mito_subset, 
-                      by = c("ID_Band", "TimePoint"), all.x = TRUE)
-head(MitoBlood_Merge)
-
-# Clean CORT Dataset
-# 1. Align Column Names to match MitoBlood Merge
-# 2. Change ID Band to integer 
-
-# Fix Column Names
-colnames(CORT)[colnames(CORT) == "BirdID"] <- "ID_Band"
-
-# Ensure matching types
-CORT$ID_Band <- as.integer(CORT$ID_Band)
-
-# Subset CORT Columns Needed
-
-CORT_subset <- CORT[, c("PlateNumber", "TubeID", "ID_Band", "TimePoint", "Extractor", "CORT.ng.mL.", "Notes")]
-
-
-# Merge CORT into MasterSpreadsheet by ID_Band and TimePoint
-AHDB_Exp1_Final <- merge(MitoBlood_Merge, CORT_subset, 
-                      by = c("ID_Band", "TimePoint"), all.x = TRUE)
-
-#Export to csv
-write.csv(AHDB_Exp1_Final, 
-          file = "AHDB_Exp1_MasterSpreadSheet_Final.csv", 
-          row.names = FALSE)
-
-#Subset Data for MS1
-AHDB_Exp1_MS1 <- AHDB_Exp1_Final %>%
-  filter(TimePoint == "Baseline",
-         Treatment     != "A")
-
-#Export to csv
-write.csv(AHDB_Exp1_MS1, 
-          file = "AHDB_Exp1_MS1.csv", 
-          row.names = FALSE)
-
 ### Data Processing & Filtering - qPCR Measures of mtDNA and Telomeres
 # Import raw qPCR output for each plate 1) the Single Copy Autosomal Gene (EEF2) and mtDNA gene multiplex and 2) the Telomere reaction. 
 
@@ -100,7 +22,7 @@ dim(SCNAG)
 
 Telo <- read.csv("AHDB1_Manuscript1_Deaths_Telomere_Heidinger_2025-08-01 11-52-51_795BR20744 -  Quantification Cq Results.csv")
 dim(Telo)
-```
+
 
 # Edit 
 
@@ -116,7 +38,7 @@ Plate1$PlateID <- "Plate1"
 Plate1$Target[Plate1$Fluor == "VIC"] <- "scnag"
 Plate1$Target[Plate1$Fluor == "FAM"] <- "mtdna"
 Plate1$Target[Plate1$Fluor == "SYBR"] <- "telomeres"
-```
+
 
 # Identify and remove outliers (across the three replicates)
 
@@ -143,7 +65,6 @@ Plate1 <- Plate1 %>%
   filter(!(Diff_AVG_Cq > 0.4001 & Diff_AVG_Cq == max(Diff_AVG_Cq)))
 dim(Plate1)
 
-```
 
 # Additional identification and removal of outliers
 
@@ -160,8 +81,8 @@ dim(Plate1)
 Plate1$Diff_AVG_Cq_2 <- abs(Plate1$Cq - Plate1$Cq.Mean2)
 
 # Add a column called "Flag_outlier_2"
-Plate1$Flag_outlier_2 <- ifelse(Plate1$Diff_AVG_Cq_2 > 0.401, "yes", "no")
-VeryHighCq_2 <- Plate1[Plate1$Diff_AVG_Cq > "0.401", ]
+Plate1$Flag_outlier_2 <- ifelse(Plate1$Diff_AVG_Cq_2 > 0.4001, "yes", "no")
+VeryHighCq_2 <- Plate1[Plate1$Diff_AVG_Cq > "0.4001", ]
 # Report number of rows to be removed
 print(paste("Number of rows with High Cq:", nrow(VeryHighCq_2)))
 # Make a table called  of the high cq values
@@ -279,7 +200,85 @@ dim (Trait)
 FinalData <- merge(Plate1_FinalData, Trait, by = c("Sample"))
 
 
-
 # Write the final data file for this plate
 write.csv(file = "AHDB1_Manuscript1_ESEBqPCR_FinalData.csv", FinalData, row.names = FALSE)
 
+
+### Final Data Processing & Filtering - mtDNA and Telomeres, and CORT
+# Read CSV files
+
+MasterSpreadsheet <- read.csv("AHDB_Exp1_BloodData.csv", header=T, sep = ",", as.is=T)
+str(MasterSpreadsheet)
+
+MitoTelo <- read.csv("AHDB1_Manuscript1_ESEBqPCR_FinalData.csv", header=T, sep = ",", as.is=T)
+str(MitoTelo)
+
+CORT <- read.csv("AHDB_CORT_FileForMasterDataset.csv", header=T, sep = ",", as.is=T)
+str(CORT)
+
+# Clean MitoTelo Dataset 
+# 1. Set Sample Column Name to ID_Band,
+# 2. Remove B in Sample Column (B = Baseline) 
+# There exists a seperate timepoint column hence B in Sample column (now ID_Band) can be removed)
+
+MitoTelo_clean <- MitoTelo %>%
+  mutate(
+    ID_Band = as.numeric(str_extract(Sample, "\\d+"))  # keeps numeric part corresponding to bird_ID 
+  ) %>%
+  select(-Sample)  # Removes old Sample column
+head(MitoTelo_clean)
+
+
+# Subset Mito Columns Needed
+mito_subset <- MitoTelo_clean[, c("ID_Band", "TimePoint", "SQ.Mean_SCNAG", "SQ.Mean_mtDNA", "mtDNA.Mean",
+                                  "Cq.Mean_SCNAG", "SQ.Mean_Telomeres", "Cq.Mean_Telomeres", 
+                                  "Telomeres.per.cell")]
+
+colnames(mito_subset)[3:9] <- c(
+  "Blood_SQ.Mean_SCNAG",
+  "Blood_SQ.Mean_mtDNA",
+  "Blood_mtDNA.Mean",
+  "Blood_Cq.Mean_SCNAG",
+  "Blood_SQ.Mean_Telomeres",
+  "Blood_Cq.Mean_Telomeres",
+  "Blood_Telomeres.per.cell"
+)
+
+# Merge by ID_Band and TimePoint
+MitoBlood_Merge <- merge(MasterSpreadsheet, mito_subset, 
+                         by = c("ID_Band", "TimePoint"), all.x = TRUE)
+head(MitoBlood_Merge)
+
+# Clean CORT Dataset
+# 1. Align Column Names to match MitoBlood Merge
+# 2. Change ID Band to integer 
+
+# Fix Column Names
+colnames(CORT)[colnames(CORT) == "BirdID"] <- "ID_Band"
+
+# Ensure matching types
+CORT$ID_Band <- as.integer(CORT$ID_Band)
+
+# Subset CORT Columns Needed
+
+CORT_subset <- CORT[, c("PlateNumber", "TubeID", "ID_Band", "TimePoint", "Extractor", "CORT.ng.mL.", "Notes")]
+
+
+# Merge CORT into MasterSpreadsheet by ID_Band and TimePoint
+AHDB_Exp1_Final <- merge(MitoBlood_Merge, CORT_subset, 
+                         by = c("ID_Band", "TimePoint"), all.x = TRUE)
+
+#Export to csv
+write.csv(AHDB_Exp1_Final, 
+          file = "AHDB_Exp1_MasterSpreadSheet_Final.csv", 
+          row.names = FALSE)
+
+#Subset Data for MS1
+AHDB_Exp1_MS1 <- AHDB_Exp1_Final %>%
+  filter(TimePoint == "Baseline",
+         Treatment     != "A")
+
+#Export to csv
+write.csv(AHDB_Exp1_MS1, 
+          file = "AHDB_Exp1_MS1.csv", 
+          row.names = FALSE)
