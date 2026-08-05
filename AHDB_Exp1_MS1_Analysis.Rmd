@@ -746,7 +746,7 @@ library(cowplot)
 combined_blood_measure_plot <- plot_grid(p1, p2, p3, p4, p5, p6, nrow = 2)
 combined_blood_measure_plot
 
-#ggsave("Combined_Blood_ViolinPlot.png", combined_blood_measure_plot, width = 12, height = 4)
+ggsave("Combined_Blood_ViolinPlot.png", combined_blood_measure_plot, width = 12, height = 8)
 
 ```
 
@@ -792,7 +792,7 @@ Model_Results <- bind_rows(
 
 Model_Results
 
-#write.csv(Model_Results, "Model_Summary_Table.csv", row.names = FALSE)
+write.csv(Model_Results, "Model_Summary_Table.csv", row.names = FALSE)
 
 ```
 
