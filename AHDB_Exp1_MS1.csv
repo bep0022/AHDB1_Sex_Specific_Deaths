@@ -14,7 +14,7 @@
 4573,"Baseline","Older","F",4157,1,"D","No","209","190","No","0.4","0.5","No","U","54","","031324A","",118,"",NA,NA,NA,NA,NA,NA,NA,2,32,"MRM",0.423809289,"Transferred from bad tube, lysed"
 4578,"Baseline","Older","F",4171,2,"D","No","265","271","No","0.4","No","No","U","56","2:55","031324A","75001L04",114,"",NA,NA,NA,NA,NA,NA,NA,9,230,"BH",1.602584603,"Lysed"
 4579,"Baseline","Older","F",4171,2,"E","No","216","200","No","0.4","0.5","No","U","58","1:30","031324A","75001L04",118,"",NA,NA,NA,NA,NA,NA,NA,4,103,"BH",0.631540734,""
-4582,"Baseline","Younger","F",4222,3,"E","No","269","271","No","0.4","0.5","No","No","No","","","",114,"Lot numbers not marked in data sheet but bleeds before and after this date, use the same lot numbers.",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+4582,"Baseline","Older","F",4222,3,"E","No","269","271","No","0.4","0.5","No","No","No","","","",114,"Lot numbers not marked in data sheet but bleeds before and after this date, use the same lot numbers.",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
 4586,"Baseline","Older","F",4222,3,"C","No","270","262","No","0.5","0.6","No","L","No","","","",118,"Lot numbers not marked in data sheet but bleeds before and after this date, use the same lot numbers.",NA,NA,NA,NA,NA,NA,NA,1,7,"BH",1.411193388,"Lysed"
 4593,"Baseline","Older","M",4149,2,"B","No","180","170","No","0.3","0.4","No","U","56","3:00","031324A","75001L04",118,"",NA,NA,NA,NA,NA,NA,NA,6,154,"MRM",2.844350167,""
 4600,"Baseline","Older","M",4184,3,"B","No","170","170","No","0.6","0.7","No","No","63","","","",114,"Lot numbers not marked in data sheet but bleeds before and after this date, use the same lot numbers.",NA,NA,NA,NA,NA,NA,NA,9,225,"BH",4.361357716,"Lysed"
@@ -31,7 +31,7 @@
 4703,"Baseline","Younger","F",4112,5,"B","No","178","183","No","1.8","1.8","No","U","58","1:20","042224A","75001L04",118,"",NA,NA,NA,NA,NA,NA,NA,6,157,"MRM",1.532691351,""
 4704,"Baseline","Younger","F",4112,5,"C","No","263","243","No","0.7","No","No","U","56","3:00","031324A","75001L04",114,"",NA,NA,NA,NA,NA,NA,NA,9,240,"BH",2.570964425,""
 4712,"Baseline","Younger","F",4123,4,"B","No","211","212","No","0.4","0.4","No","U/L","54","1:59","031324A","75001L04",114,"",NA,NA,NA,NA,NA,NA,NA,5,121,"BH",0.463078997,""
-4715,"Baseline","Older","F",4115,4,"C","No","348","253","294","0.5","No","No","L","50","3:00","031324A","75001L04",114,"",NA,NA,NA,NA,NA,NA,NA,8,212,"BH",0.08288906,"Lysed"
+4715,"Baseline","Younger","F",4115,4,"C","No","348","253","294","0.5","No","No","L","50","3:00","031324A","75001L04",114,"",NA,NA,NA,NA,NA,NA,NA,8,212,"BH",0.08288906,"Lysed"
 4717,"Baseline","Younger","F",4157,5,"C","No","292","275","No","0.6","No","No","U/L","50","2:42","042224A","75001L04",118,"",NA,NA,NA,NA,NA,NA,NA,8,205,"BH",0.095287329,"Milky"
 4719,"Baseline","Younger","F",4222,4,"D","Yes","245","No","No","0.5","No","No","U","56.5","3:00","031324A","75001L04",118,"",NA,NA,NA,NA,NA,NA,NA,4,87,"BH",3.342984133,"Transferred from bad tub"
 4720,"Baseline","Younger","F",4374,5,"E","No","275","271","No","0.4","No","No","U","50","1:31","042224A","75001L04",118,"",165.417062166449,128.700416285524,0.778035920841229,24.191436629434,126633.246382883,15.6750893105825,765.539205716637,5,128,"BH",0.619679545,""
