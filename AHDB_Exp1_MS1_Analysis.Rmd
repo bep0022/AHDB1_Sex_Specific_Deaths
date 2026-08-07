@@ -193,7 +193,7 @@ print(obs_death)
 #4 M     Younger        14          0     0
 ```
 
-```{r}
+```{r, fig.width=8, fig.height=12}
 
 # Dot Plot
 ggplot(obs_death, aes(x = AgeCategory , y = Proportion)) +
@@ -224,7 +224,7 @@ p <- ggplot(obs_death, aes(x = AgeCategory, y = Proportion_plot, fill = Sex)) +
     vjust = -0.5,
     size = 6
   ) +
-  scale_fill_manual(values = c("purple", "#000000")) +
+  scale_fill_manual(values = c("#D3D3D3", "#000000")) +
   scale_x_discrete(
     limits = c("Younger", "Older"),
     labels = c(
@@ -246,11 +246,13 @@ p
 ggsave(
   filename = "Proportion_Succumbed.png",
   plot = p,
-  width = 7,
-  height = 5,
+  width = 8,
+  height = 12,
   units = "in",
   dpi = 600
 )
+
+ggsave("Combined_Blood_ViolinPlot.png", combined_blood_measure_plot, width = 8, height = 12)
 
 ```
 
@@ -549,6 +551,22 @@ Younger_females_Mito <- AHDB_Baseline_YoungerFemale %>%
 
 ```
 
+# Calculate Mean mtDNA Values & plot residuals
+```{r}
+
+mean(Younger_females_Mito$Blood_mtDNA.Mean)
+sd(Younger_females_Mito$Blood_mtDNA.Mean)
+min(Younger_females_Mito$Blood_mtDNA.Mean)
+max(Younger_females_Mito$Blood_mtDNA.Mean)
+hist(Younger_females_Mito$Blood_mtDNA.Mean)
+
+# Results:
+#[1] 0.3158152
+#[1] 0.2003234
+#[1] 0.06489803
+#[1] 0.7780359
+```
+
 # GLMER -> mtDNA Copy Number Model
 ```{r}
 
@@ -559,17 +577,6 @@ Mito_Model <- glm(Died_InTrt ~  Blood_mtDNA.Mean,
 summary(Mito_Model)
 
 # Results not significant (p=0.429)
-
-# Plot
-ggplot(Younger_females_Mito, aes(x = Died_InTrt, y = Blood_mtDNA.Mean)) +
-  geom_violin(aes(fill = Died_InTrt), trim = FALSE, alpha = 0.6) +  # Violin by group
-  geom_jitter(width = 0.1, alpha = 0.7, size = 1.5, color = "black") +  # Add data points
-  labs(
-    x = "Died In Treatment?",
-    y = "Avg. mtDNA Copy Number"
-  ) +
-  theme_classic()
-
 ```
 
 # Remove rows with missing values & create Telomeres dataset
@@ -578,6 +585,22 @@ ggplot(Younger_females_Mito, aes(x = Died_InTrt, y = Blood_mtDNA.Mean)) +
 Younger_females_Telo <- AHDB_Baseline_YoungerFemale %>%
   filter(!is.na(Blood_Telomeres.per.cell))
 
+```
+
+# Calculate Mean T/S Values & plot residuals
+```{r}
+
+mean(Younger_females_Telo$Blood_Telomeres.per.cell)
+sd(Younger_females_Telo$Blood_Telomeres.per.cell)
+min(Younger_females_Telo$Blood_Telomeres.per.cell)
+max(Younger_females_Telo$Blood_Telomeres.per.cell)
+hist(Younger_females_Telo$Blood_Telomeres.per.cell)
+
+# Results:
+#[1] 853.001
+#[1] 435.0181
+#[1] 362.944
+#[1] 1629.904
 ```
 
 # GLMER -> Telomere (T/S ratio) Model (WITH LYSED BUT NO Mom_ID)
@@ -590,17 +613,6 @@ Telomeres_Model <- glm(Died_InTrt ~  Blood_Telomeres.per.cell,
 summary(Telomeres_Model)
 
 # Results not significant (p=0.942)
-
-# Plot
-ggplot(Younger_females_Telo, aes(x = Died_InTrt, y = Blood_Telomeres.per.cell)) +
-  geom_violin(aes(fill = Died_InTrt), trim = FALSE, alpha = 0.6) +  # Violin by group
-  geom_jitter(width = 0.1, alpha = 0.7, size = 1.5, color = "black") +  # Add data points
-  labs(
-    x = "Died In Treatment?",
-    y = "Telomeres (T/S ratio)"
-  ) +
-  theme_classic()
-
 ```
 
 # Double checking SCNAG
